@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 export const signupController = async (req, res) => {
   try {
     const { email, password, username } = req.body;
+
     const isExistingUser = await User.findOne({ email });
     if (isExistingUser) {
       return res.status(409).json({
@@ -11,16 +12,26 @@ export const signupController = async (req, res) => {
       });
     }
 
-    const token = jwt.sign({email, username}, process.env,JWT_SECRET, {expiresIn: "1h"});
-
-    await User.create({
+    const newUser = await User.create({
       email,
       password,
       username,
     });
+
+    const token = jwt.sign(
+      { email, username },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" }
+    );
+
     return res.status(201).json({
-      message: "User created successfully",
-        token,
+      message: "Signup successful",
+      user: {
+        id: newUser._id,
+        username: newUser.username,
+        email: newUser.email,
+      },
+      token,
     });
   } catch (err) {
     console.error(err);
