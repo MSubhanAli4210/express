@@ -19,7 +19,7 @@ export const signupController = async (req, res) => {
     });
 
     const token = jwt.sign(
-      { email, username },
+      { id: newUser._id, email: newUser.email, username: newUser.username, role: newUser.role },
       process.env.JWT_SECRET,
       { expiresIn: "1h" }
     );
