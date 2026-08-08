@@ -63,6 +63,14 @@ export const updateOrderStatus = async (req, res) => {
     );
 
     if (!order) return res.status(404).json({ message: "Order not found" });
+
+    // Emit real-time update to the specific user who owns this order
+    const io = req.app.get('io');
+    io.to(order.user.toString()).emit('orderStatusUpdated', {
+      orderId: order._id,
+      status: order.status,
+    });
+
     return res.status(200).json({ order });
   } catch (err) {
     console.error(err);
