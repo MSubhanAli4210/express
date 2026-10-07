@@ -18,14 +18,14 @@ mongoose.connect(process.env.MONGODB_URI).then(() => {
   console.log('Error connecting to MongoDB', err);
 });
 
-app.use(cors({origin: "http://localhost:5173", credentials: true,}));
+app.use(cors({origin: "https://ecommerce-app-one-alpha.vercel.app", credentials: true,}));
 app.use(express.json());
 
 // Wrap Express in a raw HTTP server so Socket.IO can attach to it
 const httpServer = createServer(app);
 
 const io = new Server(httpServer, {
-  cors: { origin: "http://localhost:5173", credentials: true },
+  cors: { origin: "https://ecommerce-app-one-alpha.vercel.app", credentials: true },
 });
 
 // Each user joins a private "room" named after their own userId.
